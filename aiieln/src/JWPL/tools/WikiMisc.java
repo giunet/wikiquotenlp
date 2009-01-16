@@ -1,5 +1,4 @@
 package JWPL.tools;
-// è una prova per testare il funzionamento del repository
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
