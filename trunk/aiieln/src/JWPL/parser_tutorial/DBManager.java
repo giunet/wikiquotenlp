@@ -18,7 +18,7 @@ public class DBManager {
 		try {
 			// Load JDBC/MySQL driver
 			Class.forName(driver).newInstance();
-			connection =  (Connection) DriverManager.getConnection(ind, "root", "15081985");
+			connection =  (Connection) DriverManager.getConnection(ind, "root", "");
 			System.out.println("Connect Database Succesfully");
 		} catch (Exception ex) {
 			System.out
