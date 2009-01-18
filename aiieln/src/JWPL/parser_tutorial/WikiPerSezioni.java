@@ -39,9 +39,9 @@ public class WikiPerSezioni {
 	 static Writer out;
 	 static Writer outins;
 	 static int count = 0;
-	public static void main(String[] args) throws WikiApiException, SQLException, IOException {
+	public static void main(String[] args) throws WikiApiException, SQLException, IOException {}
 		//db connection settings
-		public void createInsertFile(String dbname, String dbuser, String dbpass, String dbhost)
+		public void createInsertFile(String dbname, String dbuser, String dbpass, String dbhost){
 		DatabaseConfiguration dbConfig = new DatabaseConfiguration();
         dbConfig.setDatabase(dbname);
         dbConfig.setHost(dbhost);
