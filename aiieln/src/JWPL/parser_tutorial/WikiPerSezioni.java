@@ -41,11 +41,12 @@ public class WikiPerSezioni {
 	 static int count = 0;
 	public static void main(String[] args) throws WikiApiException, SQLException, IOException {
 		//db connection settings
+		public void createInsertFile(String dbname, String dbuser, String dbpass, String dbhost)
 		DatabaseConfiguration dbConfig = new DatabaseConfiguration();
-        dbConfig.setDatabase("wikiquote");
-        dbConfig.setHost("localhost");
-        dbConfig.setUser("root");
-        dbConfig.setPassword("15081985");
+        dbConfig.setDatabase(dbname);
+        dbConfig.setHost(dbhost);
+        dbConfig.setUser(dbuser);
+        dbConfig.setPassword(dbpass);
         dbConfig.setLanguage(Language.italian);
         out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:/scrivimi.txt"), "UTF8"));
 		outins = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:/insert.sql"), "UTF8"));
