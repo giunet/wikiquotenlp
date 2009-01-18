@@ -37,6 +37,8 @@ import de.tudarmstadt.ukp.wikipedia.api.exception.WikiApiException;
 public class WikiPerSezioni {
 	private static final String LF = "\n";
 	 static Writer out;
+	 static Writer outins;
+	 static int count = 0;
 	public static void main(String[] args) throws WikiApiException, SQLException, IOException {
 		//db connection settings
 		DatabaseConfiguration dbConfig = new DatabaseConfiguration();
@@ -46,7 +48,7 @@ public class WikiPerSezioni {
         dbConfig.setPassword("15081985");
         dbConfig.setLanguage(Language.italian);
         out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:/scrivimi.txt"), "UTF8"));
-		
+		outins = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("C:/insert.sql"), "UTF8"));
 		//initialize a wiki
 		Wikipedia wiki = new Wikipedia(dbConfig);
 		DetectionLanguage dl = new DetectionLanguage();
@@ -55,20 +57,20 @@ public class WikiPerSezioni {
 		String nameVal= new String();
 		Statement s = DBManager.getConnection().createStatement();
 		ResultSet rs= null;
-		int count = 0;
-		StampaPagineLatine(wiki,dl,s,rs,count);
-		StampaPagineStaticheItaliane(wiki,dl,s,rs,count);
-		StampaPagineSezioneProverbiModi(wiki,dl,s,rs,count);
+		StampaPagineLatine(wiki,dl,s,rs);
+		StampaPagineStaticheItaliane(wiki,dl,s,rs);
+		StampaPagineSezioneProverbiModi(wiki,dl,s,rs);
 		//s.executeQuery("SELECT * FROM page p where p.text like \"%= modi di%\" or p.text like \"%=modi di%\" or p.text like \"%= [[modi di%\" or p.text like \"%=[[modi di%\" or p.text like \"%= ''modi di%\" or p.text like \"%=  ''modi di%\" order by name;");
 		   rs.close ();
 		   s.close ();
 		   out.close();
+		   outins.close();
 		      
 		   System.out.println (count + " rows were retrieved");
 		   
 	}
 	
-	public static void StampaPagineLatine(Wikipedia wiki,DetectionLanguage dl,Statement s,ResultSet rs,int count)throws WikiApiException, SQLException, IOException{
+	public static void StampaPagineLatine(Wikipedia wiki,DetectionLanguage dl,Statement s,ResultSet rs)throws WikiApiException, SQLException, IOException{
 		s.executeQuery("Select * from page p where p.name='Proverbi_latini' or p.name='Modi_di_dire_latini';");
 		   rs = s.getResultSet ();
 		   String nameVal = "";
@@ -97,17 +99,18 @@ public class WikiPerSezioni {
 						   	     cita=cita.replaceAll("ì", "i'");
 						   	     cita=cita.replaceAll("ò", "o'");
 						   	     cita=cita.replaceAll("ù", "u'");
-							     writeLine(cita); //scrive su file
+						   	     ++count;
+							     writeLine(cita,count,nameVal); //scrive su file
 						   }
 						}
 					}
 
 				}
-		       ++count;
+		       
 		   }
 	}
 	
-	public static void StampaPagineSezioneProverbiModi(Wikipedia wiki,DetectionLanguage dl,Statement s,ResultSet rs,int count)throws WikiApiException, SQLException, IOException{
+	public static void StampaPagineSezioneProverbiModi(Wikipedia wiki,DetectionLanguage dl,Statement s,ResultSet rs)throws WikiApiException, SQLException, IOException{
 		   s.executeQuery ("SELECT * FROM page p where p.text like \"%= proverbi%\" or p.text like \"%=proverbi%\" or p.text like \"%= [[proverbi%\" or p.text like \"%=[[proverbi%\" or p.text like \"%= ''proverbi%\" or p.text like \"%=  ''proverbi%\" or  p.text like \"%= modi di%\" or p.text like \"%=modi di%\" or p.text like \"%= [[modi di%\" or p.text like \"%=[[modi di%\" or p.text like \"%= ''modi di%\" or p.text like \"%=  ''modi di%\" order by name;");
 		   rs = s.getResultSet ();
 		   String nameVal = "";
@@ -136,18 +139,19 @@ public class WikiPerSezioni {
 						   	     cita=cita.replaceAll("ì", "i'");
 						   	     cita=cita.replaceAll("ò", "o'");
 						   	     cita=cita.replaceAll("ù", "u'");
-							     writeLine(cita); //scrive su file
+						   	     ++count;
+							     writeLine(cita,count,nameVal); //scrive su file
 						   }
 						}
 					}
 
 				}
-		       ++count;
+		       
 		   }
 	}
 	
 	//pagine proverbi e modi di dire italiani + slogan
-	public static void StampaPagineStaticheItaliane(Wikipedia wiki,DetectionLanguage dl,Statement s,ResultSet rs,int count) throws WikiApiException, SQLException, IOException{
+	public static void StampaPagineStaticheItaliane(Wikipedia wiki,DetectionLanguage dl,Statement s,ResultSet rs) throws WikiApiException, SQLException, IOException{
 		s.executeQuery("Select * from page p where p.name='Proverbi_italiani' or p.name='Modi_di_dire_italiani' or p.name='Slogan';");
 		rs = s.getResultSet();
 		String nameVal = "";
@@ -171,12 +175,13 @@ public class WikiPerSezioni {
 						   	     cita=cita.replaceAll("ì", "i'");
 						   	     cita=cita.replaceAll("ò", "o'");
 						   	     cita=cita.replaceAll("ù", "u'");
-							     writeLine(cita); //scrive su file
+						   	     ++count;
+							     writeLine(cita,count,nameVal); //scrive su file
 						   }
 						}
 					}
 				}  
-		       ++count;
+		       
 		   }
 	}
 	
@@ -352,26 +357,35 @@ public class WikiPerSezioni {
 	}
 	
 	
-	public static void writeLine(String line){
+	public static void writeLine(String line,int progressivo,String nomePagina){
 		FileWriter fw = null;
+		FileWriter insert = null;
+		String linemod = null;
+		String titlemod = null;
 		try {
 			fw = new FileWriter("C:/scrivimi.txt", true);
-			
+			insert = new FileWriter("C:/insert.sql",true);
 			
 		} catch (IOException e) {
 		
 			e.printStackTrace();
 		}
 		BufferedWriter bw = new BufferedWriter (fw);
+		BufferedWriter iw = new BufferedWriter (insert);
 		PrintWriter outFile = new PrintWriter (bw);
+		PrintWriter outinsert = new PrintWriter (iw);
 
 		outFile.println(line);
-
-		outFile.close();
+		linemod = line.replace("'", "\\'");	
+		titlemod= nomePagina.replace("'", "\'");
+		outinsert.println("Insert into citazioni values (" + progressivo + ",'B" + progressivo + "','" + titlemod + "','" + linemod + "');"+"\n");
 		
+		outFile.close();
+		outinsert.close();
 		   try {
 		       
-		        out.append(line+"\n");   
+		        out.append(line+"\n"); 
+		        outins.append("Insert into citazioni values (" + progressivo + ",'B" + progressivo + "','" + titlemod + "','" + linemod + "');"+"\n");
 		    
 		    } catch (IOException e) {
 		    }
