@@ -41,10 +41,7 @@ public class WikiPerSezioni {
 	static int count = 0;
 
 	public static void main(String[] args) throws WikiApiException,
-			SQLException, IOException {
-		String ritorno = getSubstr("prova )sottostringa");
-		System.out.println(ritorno);
-	}
+			SQLException, IOException {}
 
 	//db connection settings
 	public void createInsertFile(String dbname, String dbuser, String dbpass,
