@@ -41,7 +41,9 @@ public class WikiPerSezioni {
 	static int count = 0;
 
 	public static void main(String[] args) throws WikiApiException,
-			SQLException, IOException {}
+			SQLException, IOException {
+		WikiMisc.eliminaDuplicati("C:/scrivimi.txt");
+	}
 
 	//db connection settings
 	public void createInsertFile(String dbname, String dbuser, String dbpass,
