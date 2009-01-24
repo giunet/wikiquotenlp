@@ -1,3 +1,10 @@
+package JWPL.tools;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Hashtable;
@@ -97,7 +104,7 @@ public class Wshingling {
 
 	}
 
-	//metodo che elimina i duplicati da listaPoli
+	//metodo che elimina i duplicati
 	private void eliminaDuplicati() {
 		Set<String> setShingA;
 		Set<String> setShingB;
@@ -141,7 +148,7 @@ public class Wshingling {
 		
 			return false;
 	}
-	public Set caricaSet(){
+	public Set caricaSet(String nomeFile) throws IOException{
 		Set insiemeCitazioni = null;
 		
 		File file = new File(nomeFile);
