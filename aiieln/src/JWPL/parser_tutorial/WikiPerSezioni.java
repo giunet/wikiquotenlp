@@ -42,7 +42,10 @@ public class WikiPerSezioni {
 
 	public static void main(String[] args) throws WikiApiException,
 			SQLException, IOException {
+		
+		new WikiPerSezioni().createInsertFile("wikiquote", "root", "", "localhost");
 		WikiMisc.eliminaDuplicati("C:/scrivimi.txt");
+		WikiMisc.eliminaDuplicati("C:/insert.sql");
 	}
 
 	//db connection settings
@@ -60,22 +63,23 @@ public class WikiPerSezioni {
 				new FileOutputStream("C:/insert.sql"), "UTF8"));
 		//initialize a wiki
 		Wikipedia wiki = new Wikipedia(dbConfig);
-		DetectionLanguage dl = new DetectionLanguage();
+		//DetectionLanguage dl = new DetectionLanguage();
 		DBManager.connect();
 
 		String nameVal = new String();
 		Statement s = DBManager.getConnection().createStatement();
 		ResultSet rs = null;
-		StampaPagineLatine(wiki, dl, s, rs);
-		StampaPagineStaticheItaliane(wiki, dl, s, rs);
-		StampaPagineSezioneProverbiModi(wiki, dl, s, rs);
-		//s.executeQuery("SELECT * FROM page p where p.text like \"%= modi di%\" or p.text like \"%=modi di%\" or p.text like \"%= [[modi di%\" or p.text like \"%=[[modi di%\" or p.text like \"%= ''modi di%\" or p.text like \"%=  ''modi di%\" order by name;");
+//	StampaPagineLatine(wiki , dl, s, rs);
+//	StampaPagineStaticheItaliane(wiki, dl, s, rs);
+//	StampaPagineSezioneProverbiModi(wiki, dl, s, rs);
+		
+		rs = s.executeQuery("SELECT * FROM page p where p.text like \"%= modi di%\" or p.text like \"%=modi di%\" or p.text like \"%= [[modi di%\" or p.text like \"%=[[modi di%\" or p.text like \"%= ''modi di%\" or p.text like \"%=  ''modi di%\" order by name;");
 		rs.close();
 		s.close();
 		out.close();
 		outins.close();
 
-		System.out.println(count + " rows were retrieved");
+		System.out.println(rs.getFetchSize()+ " rows were retrieved");
 
 	}
 
@@ -200,7 +204,9 @@ public class WikiPerSezioni {
 
 		}
 	}
-
+	public void StampaModiDiDireWikipedia(Wikipedia wiki, String pag) {
+	
+	}
 	public static List<NestedList> giveCit(Wikipedia wiki, String pag)
 			throws WikiApiException {
 		//get the page 'Dog'

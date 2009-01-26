@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -75,22 +77,24 @@ public class WikiMisc {
 			fileList.add(linea);
 			linea = br.readLine();
 		}
+		
 		Set CleanFileList=new HashSet<String>(fileList);
+		fileList.clear();
 			for (Object cit : CleanFileList) {
-				System.out.println(cit);
+				//System.out.println(cit);
+				fileList.add((String) cit);
 			}
-			
+			File newFile = new File(File);
+			try {
+				FileOutputStream fos = new FileOutputStream(newFile);
+				PrintStream out = new PrintStream(fos);
+				for (int i = 0; i < fileList.size()-1; i++) {
+					out.println(fileList.get(i));
+				}
+			} catch (IOException e) {
+				System.out.print(e.toString());
+			}
 	}
-	/*
-	 * public static void getCitazioneFromSQL(String SQLFile) throws
-	 * IOException{
-	 * 
-	 * File f=new File(SQLFile); FileInputStream fis=new FileInputStream(f);
-	 * InputStreamReader isr=new InputStreamReader(fis); BufferedReader br=new
-	 * BufferedReader(isr); String linea=br.readLine(); while(linea!=null) {
-	 * linea=br.readLine(); }
-	 * 
-	 * }
-	 */
+	
 
 }
